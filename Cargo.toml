@@ -1,0 +1,51 @@
+[package]
+name = "mcpg-plugin-identity-oidc"
+version = "0.1.0-alpha.15"
+license = "Apache-2.0"
+edition = "2024"
+description = "OIDC/OAuth identity plugin for MCPG gateway — standalone crate for OIDC discovery, JWKS verification, and token introspection"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+mcpg-plugin-identity-oidc-core = { git = "https://github.com/mcpg-dev/mcpg-plugin-identity-oidc-core", tag = "v0.1.0-beta.10", version = "=0.1.0-beta.10" }
+mcpg-plugin-protocol = { git = "https://github.com/mcpg-dev/mcpg-plugin-protocol", tag = "v0.1.0-beta.13", version = "=0.1.0-beta.13" }
+mcpg-plugin-sdk = { git = "https://github.com/mcpg-dev/mcpg-plugin-sdk", tag = "v0.1.0-beta.13", version = "=0.1.0-beta.13" }
+anyhow = "1.0"
+async-trait = "0.1"
+base64 = "0.22"
+http = "1"
+jsonwebtoken = "10.4"
+reqwest = { version = "0.12", default-features = false, features = ["rustls-tls", "json"] }
+schemars = { version = "0.8", default-features = false, features = ["derive", "preserve_order"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+# OIDC keeps its async internals — JWKS discovery + refresh +
+# introspection use `tokio::sync::RwLock`-backed caches that would be
+# a major rewrite to make sync. Instead, the cdylib bundles its own
+# private `tokio::runtime::Runtime` and `block_on`s each
+# resolve_identity call. Enables `rt-multi-thread` so the JWKS
+# refresh background task (if added) has a worker pool. "time" is
+# needed by the resolver's cache TTL arithmetic.
+tokio = { version = "1", features = ["sync", "rt", "rt-multi-thread", "time"] }
+tracing = "0.1"
+metrics = "0.24"
+url = "2.5.8"
+
+[dev-dependencies]
+tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
+
+[features]
+# Default OFF so the workspace build (which includes the gateway as a
+# bin) does not link multiple plugin rlibs all exporting
+# `mcpg_plugin_register` — a linker collision. Standalone cdylib
+# builds (CI smoke, OCI publish) opt in via `--features cdylib-export`
+# to produce a `.so` with the extern entry-point.
+default = []
+cdylib-export = []
+# Declared so the SDK's `declare_identity_plugin!` `build_static`
+# accessor (gated `#[cfg(feature = "static-firstparty")]`) does not
+# trigger `unexpected_cfgs` in consumer compilation. Empty: this plugin
+# is consumed as a cdylib, not via the static-firstparty fast path.
+static-firstparty = []

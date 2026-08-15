@@ -1,0 +1,16 @@
+schema: mcpg.dev/plugin/v1
+id: dev.mcpg.identity.oidc
+name: OIDC/OAuth Identity Resolver
+license: Apache-2.0
+description: |
+  Resolves caller identity from OIDC / OAuth bearer tokens against
+  one or more configured issuers. Validates signatures, maps
+  claims, and populates the gateway identity context used by
+  downstream plugins and audit logging.
+class: identity_provider
+runtime: native-cdylib-v1
+protocol_version: "1.0"
+required_capabilities:
+  # OIDC discovery, JWKS refresh, and (optional) opaque-token
+  # introspection all issue outbound HTTP to the identity provider.
+  - network_outbound

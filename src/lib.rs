@@ -67,7 +67,7 @@ fn record_resolve_outcome(result: &IdentityResolution, elapsed: std::time::Durat
             elapsed_ms = %elapsed.as_millis(),
             "oidc identity: no token — fall through"
         ),
-        IdentityResolution::Invalid { reason } => warn!(
+        IdentityResolution::Invalid { reason, .. } => warn!(
             reason = %reason,
             elapsed_ms = %elapsed.as_millis(),
             "oidc identity: token verification failed"
@@ -179,7 +179,10 @@ async fn resolve_from_headers(
             },
         },
         OidcVerificationResult::None => IdentityResolution::None,
-        OidcVerificationResult::Invalid(reason) => IdentityResolution::Invalid { reason },
+        OidcVerificationResult::Invalid(reason) => IdentityResolution::Invalid {
+            reason,
+            response_headers: Vec::new(),
+        },
     }
 }
 

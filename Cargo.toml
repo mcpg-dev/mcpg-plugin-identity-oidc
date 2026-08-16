@@ -1,6 +1,6 @@
 [package]
 name = "mcpg-plugin-identity-oidc"
-version = "0.1.0-alpha.15"
+version = "0.1.0-alpha.16"
 license = "Apache-2.0"
 edition = "2024"
 description = "OIDC/OAuth identity plugin for MCPG gateway — standalone crate for OIDC discovery, JWKS verification, and token introspection"
@@ -9,9 +9,9 @@ description = "OIDC/OAuth identity plugin for MCPG gateway — standalone crate 
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
-mcpg-plugin-identity-oidc-core = { git = "https://github.com/mcpg-dev/mcpg-plugin-identity-oidc-core", tag = "v0.1.0-beta.10", version = "=0.1.0-beta.10" }
-mcpg-plugin-protocol = { git = "https://github.com/mcpg-dev/mcpg-plugin-protocol", tag = "v0.1.0-beta.13", version = "=0.1.0-beta.13" }
-mcpg-plugin-sdk = { git = "https://github.com/mcpg-dev/mcpg-plugin-sdk", tag = "v0.1.0-beta.13", version = "=0.1.0-beta.13" }
+mcpg-plugin-identity-oidc-core = { git = "https://github.com/mcpg-dev/mcpg-plugin-identity-oidc-core", tag = "v0.1.0-beta.11", version = "=0.1.0-beta.11" }
+mcpg-plugin-protocol = { git = "https://github.com/mcpg-dev/mcpg-plugin-protocol", tag = "v0.1.0-beta.14", version = "=0.1.0-beta.14" }
+mcpg-plugin-sdk = { git = "https://github.com/mcpg-dev/mcpg-plugin-sdk", tag = "v0.1.0-beta.14", version = "=0.1.0-beta.14" }
 anyhow = "1.0"
 async-trait = "0.1"
 base64 = "0.22"

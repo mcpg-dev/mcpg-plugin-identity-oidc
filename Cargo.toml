@@ -1,6 +1,6 @@
 [package]
 name = "mcpg-plugin-identity-oidc"
-version = "0.1.0-alpha.25"
+version = "0.1.0-alpha.26"
 license = "Apache-2.0"
 edition = "2024"
 description = "OIDC/OAuth identity plugin for MCPG gateway — standalone crate for OIDC discovery, JWKS verification, and token introspection"
@@ -9,14 +9,16 @@ description = "OIDC/OAuth identity plugin for MCPG gateway — standalone crate 
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
-mcpg-plugin-identity-oidc-core = { git = "https://github.com/mcpg-dev/mcpg-plugin-identity-oidc-core", tag = "v0.1.0-beta.20", version = "=0.1.0-beta.20" }
-mcpg-plugin-protocol = { git = "https://github.com/mcpg-dev/mcpg-plugin-protocol", tag = "v0.1.0-beta.23", version = "=0.1.0-beta.23" }
-mcpg-plugin-sdk = { git = "https://github.com/mcpg-dev/mcpg-plugin-sdk", tag = "v0.1.0-beta.24", version = "=0.1.0-beta.24" }
+mcpg-plugin-identity-oidc-core = { git = "https://github.com/mcpg-dev/mcpg-plugin-identity-oidc-core", tag = "v0.1.0-beta.21", version = "=0.1.0-beta.21" }
+mcpg-plugin-protocol = { git = "https://github.com/mcpg-dev/mcpg-plugin-protocol", tag = "v0.1.0-beta.24", version = "=0.1.0-beta.24" }
+mcpg-plugin-sdk = { git = "https://github.com/mcpg-dev/mcpg-plugin-sdk", tag = "v0.1.0-beta.25", version = "=0.1.0-beta.25" }
 anyhow = "1.0"
 async-trait = "0.1"
 base64 = "0.22"
 http = "1"
-jsonwebtoken = "10.4"
+# Exactly one crypto backend, as in oidc-core: jsonwebtoken 10 enables none by
+# default and panics at the first verification when it cannot pick one.
+jsonwebtoken = { version = "10.4", default-features = false, features = ["aws_lc_rs", "use_pem"] }
 reqwest = { version = "0.12", default-features = false, features = ["rustls-tls", "json"] }
 schemars = { version = "0.8", default-features = false, features = ["derive", "preserve_order"] }
 serde = { version = "1.0", features = ["derive"] }

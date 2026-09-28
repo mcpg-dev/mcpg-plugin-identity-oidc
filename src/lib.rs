@@ -32,6 +32,7 @@ pub use mcpg_plugin_identity_oidc_core::{
 };
 
 use async_trait::async_trait;
+use mcpg_plugin_identity_oidc_core::oidc_auth_provider;
 use mcpg_plugin_protocol::{
     IdentityProviderPlugin, IdentityResolution, PluginClass, PluginIdentity, PluginManifest,
 };
@@ -170,7 +171,7 @@ async fn resolve_from_headers(
                 kind: "verified".into(),
                 trust_level: "verified".into(),
                 subject_id: Some(oidc_id.subject_id),
-                auth_provider: Some(format!("oidc_oauth:{}", oidc_id.provider_label)),
+                auth_provider: Some(oidc_auth_provider(&oidc_id.provider_label)),
                 issuer: Some(oidc_id.issuer),
                 roles: oidc_id.roles,
                 groups: oidc_id.groups,
